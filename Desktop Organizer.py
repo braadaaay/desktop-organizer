@@ -11,6 +11,7 @@ foldersdir = os.path.join(desktop,"Folders")
 othersdir = os.path.join(desktop,"Others")
 
 def organize():
+    input("Press Enter to start organizer")
     docs()
     media()
     pics()
