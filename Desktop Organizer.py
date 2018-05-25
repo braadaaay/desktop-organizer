@@ -17,13 +17,17 @@ picextensions = ('.jpg', '.jpeg', '.png', '.raw', '.gif', '.tiff', '.bmp')
 
 
 def organize():
-    input('Press Enter to start organizer')
+    input('Press Enter to start organizer: \n')
 
     #First check if the folders are present, and create them if they arent
     for folder in dirs:
         if not os.path.exists(folder):
             os.makedirs(folder)
+            print('Creating ' + folder)
+        else:
+            print(folder + ' exists')
 
+    print('\n' * 3)
 
     #Check every file for its extension and move it to the correct folder
     for file in desktoplist:
