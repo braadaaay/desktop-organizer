@@ -28,34 +28,33 @@ def organize():
     #Check every file for its extension and move it to the correct folder
     for file in desktoplist:
         filepath = os.path.join(desktop, file)
-        print('Organized: ' + file)
 
-        #Organize the Documents
-        if (file.lower().endswith(docextensions)):
-            shutil.move(filepath, os.path.join(docdir, file))
-            continue
+        if not (file.lower().endswith('.ini')):
+            #Organize the Documents
+            if (file.lower().endswith(docextensions)):
+                shutil.move(filepath, os.path.join(docdir, file))
+                print('Organized to Documents: ' + file)
 
-        #Organize the Media
-        if (file.lower().endswith(mediaextensions)):
-            shutil.move(filepath, os.path.join(mediadir, file))
-            continue
+            #Organize the Media
+            elif (file.lower().endswith(mediaextensions)):
+                shutil.move(filepath, os.path.join(mediadir, file))
+                print('Organized to Media: ' + file)
 
-        #Organize the Pictures
-        if (file.lower().endswith(picextensions)):
-            shutil.move(filepath, os.path.join(picdir, file))
-            continue
+            #Organize the Pictures
+            elif (file.lower().endswith(picextensions)):
+                shutil.move(filepath, os.path.join(picdir, file))
+                print('Organized to Images: ' + file)
 
-        #Organize the Folders
-        if os.path.isdir(filepath):
-            if not (filepath in dirs):
-                shutil.move(filepath, os.path.join(folderdir, file))
-                continue
+            #Organize the Folders
+            elif os.path.isdir(filepath):
+                if not (filepath in dirs):
+                    shutil.move(filepath, os.path.join(folderdir, file))
+                    print('Organized to Folders: ' + file)
 
-        #Organize the rest
-        if not os.path.isdir(filepath):
-            if not (file.lower().endswith('.ini')):
+            #Organize the rest
+            elif not os.path.isdir(filepath):
                 shutil.move(filepath, os.path.join(otherdir, file))
-                continue
+                print('Organized to others: ' + file)
 
 
 
