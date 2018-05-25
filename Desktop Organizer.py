@@ -1,90 +1,65 @@
 import os
 import shutil
 
+# Declare all required valiables and group directories for ease of calling the lot
 home = os.path.expanduser('~')
-desktop = os.path.join(home,"Desktop")
+desktop = os.path.join(home,'Desktop')
 desktoplist = os.listdir(desktop)
-docdir = os.path.join(desktop,"Documents")
-mediadir = os.path.join(desktop,"Media")
-picdir = os.path.join(desktop,"Images")
-foldersdir = os.path.join(desktop,"Folders")
-othersdir = os.path.join(desktop,"Others")
+docdir = os.path.join(desktop,'Documents')
+mediadir = os.path.join(desktop,'Media')
+picdir = os.path.join(desktop,'Images')
+folderdir = os.path.join(desktop,'Folders')
+otherdir = os.path.join(desktop,'Others')
+dirs = [docdir, mediadir, picdir, folderdir, otherdir]
+docextensions = ('.pdf', '.doc', '.txt', '.docx', '.rtf', '.odt')
+mediaextensions = ('.mp4', '.mpeg4', '.avi', '.mov', '.flv', '.wmv', '.mp3', '.obb', '.wav', '.aac', '.aiff', '.wma', '.m4a')
+picextensions = ('.jpg', '.jpeg', '.png', '.raw', '.gif', '.tiff', '.bmp')
+
 
 def organize():
-    input("Press Enter to start organizer")
-    docs()
-    media()
-    pics()
-    folders()
-    others()
-    input("-------------Done")
+    input('Press Enter to start organizer')
 
-def docs():
-    if not os.path.exists(docdir):
-        os.makedirs(docdir)
-        
-        
+    #First check if the folders are present, and create them if they arent
+    for folder in dirs:
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+
+
+    #Check every file for its extension and move it to the correct folder
     for file in desktoplist:
-        if (file.endswith(".pdf") or file.endswith(".doc") or
-            file.endswith(".txt") or file.endswith(".docx") or
-            file.endswith(".rtf") or file.endswith(".odt")):
-                shutil.move(desktop + "\\" + file, docdir + "\\" + file)
+        filepath = os.path.join(desktop, file)
+        print('Organized: ' + file)
 
-    print("--Organized Documents")
+        #Organize the Documents
+        if (file.lower().endswith(docextensions)):
+            shutil.move(filepath, os.path.join(docdir, file))
+            continue
 
-def media():
-    if not os.path.exists(mediadir):
-        os.makedirs(mediadir)
-        
-    for file in desktoplist:
-        if (file.endswith(".mp4") or file.endswith(".mpeg4") or
-            file.endswith(".avi") or file.endswith(".mov") or
-            file.endswith(".flv") or file.endswith(".wmv") or
-            file.endswith(".mp3") or file.endswith(".obb") or
-            file.endswith(".wav") or file.endswith(".aac") or
-            file.endswith(".aiff") or file.endswith(".wma") or
-            file.endswith(".m4a")):
-                shutil.move(desktop + "\\" + file, mediadir + "\\" + file)
+        #Organize the Media
+        if (file.lower().endswith(mediaextensions)):
+            shutil.move(filepath, os.path.join(mediadir, file))
+            continue
 
-    print("--Organized Media")
+        #Organize the Pictures
+        if (file.lower().endswith(picextensions)):
+            shutil.move(filepath, os.path.join(picdir, file))
+            continue
 
-def pics():
-    if not os.path.exists(picdir):
-        os.makedirs(picdir)
-        
-    for file in desktoplist:
-        if (file.endswith(".jpg") or file.endswith(".jpeg") or
-            file.endswith(".png") or file.endswith(".raw") or
-            file.endswith(".gif") or file.endswith(".tiff") or
-            file.endswith(".bmp")):
-                shutil.move(desktop + "\\" + file, picdir + "\\" + file)
-
-    print("--Organized Images")
-
-def folders():
-    if not os.path.exists(foldersdir):
-        os.makedirs(foldersdir)
-
-    for file in desktoplist:
-        filepath = os.path.join(desktop,file)
+        #Organize the Folders
         if os.path.isdir(filepath):
-            if (filepath != docdir and
-            filepath != mediadir and filepath != picdir and
-            filepath != foldersdir and filepath != othersdir):
-                shutil.move(filepath, os.path.join(foldersdir,file))
+            if not (filepath in dirs):
+                shutil.move(filepath, os.path.join(folderdir, file))
+                continue
 
-    print("--Organized Folders")
-            
-def others():
-    if not os.path.exists(othersdir):
-        os.makedirs(othersdir)
+        #Organize the rest
+        if not os.path.isdir(filepath):
+            if not (file.lower().endswith('.ini')):
+                shutil.move(filepath, os.path.join(otherdir, file))
+                continue
 
-    for file in desktoplist:
-        filepath = os.path.join(desktop,file)
-        if os.path.isfile(filepath):
-            shutil.move(filepath, os.path.join(othersdir,file))
-            
 
-    print("--Organized The Rest")
 
 organize()
+
+#Wait for input
+input('         --DONE')
