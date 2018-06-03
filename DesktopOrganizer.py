@@ -1,4 +1,10 @@
 #Desktop Organizer
+"""
+Todo:
+1. Create an ignore function that will ignore all files in a textfile under "ignore.txt"
+2. Integrate GUI
+3. ....
+"""
 
 import os
 import shutil
@@ -19,7 +25,25 @@ picextensions = ('.jpg', '.jpeg', '.png', '.raw', '.gif', '.tiff', '.bmp')
 
 
 def organize():
-    #First check if the folders are present, and create them if they arent
+
+    #Check if there are any files or folders to ignore from 'ignore.txt'
+    os.chdir(desktop)
+    ignore = []
+    if 'ignore.txt' in desktoplist:
+        print('ignore.txt exists\n     Reading from ignore.txt:')
+        ignore = open('ignore.txt', 'r').read().split('\n')
+        if str(ignore) != "['']":
+            for file in ignore:
+                print("     Ignoring: " + file)
+        else:
+            print('     -ignore.txt Empty!')
+        print('\n')
+    else:
+        print('Creating \'ignore.txt\' ')
+        ignore_txt = open('ignore.txt', 'w+')
+        ignore_txt.close()
+
+    #Check if the folders are present, and create them if they arent
     for folder in dirs:
         if not os.path.exists(folder):
             os.makedirs(folder)
@@ -33,7 +57,7 @@ def organize():
     for file in desktoplist:
         filepath = os.path.join(desktop, file)
 
-        if not (file.lower().endswith('.ini')):
+        if not (file.lower().endswith('.ini') or file in ignore or file == 'ignore.txt'):
             #Organize the Documents
             if (file.lower().endswith(docextensions)):
                 shutil.move(filepath, os.path.join(docdir, file))
@@ -60,8 +84,7 @@ def organize():
                 shutil.move(filepath, os.path.join(otherdir, file))
                 print('Organized to others: ' + file)
 
-
 if __name__ == "__main__":
     input('Press Enter to start organizer: \n')
     organize()
-    input('         --DONE')#Wait for input
+    input('         --DONE') #Wait for input
