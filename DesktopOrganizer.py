@@ -1,10 +1,4 @@
 #Desktop Organizer
-"""
-Todo:
-1. Create an ignore function that will ignore all files in a textfile under "ignore.txt"
-2. Integrate GUI
-3. ....
-"""
 
 import os
 import shutil
