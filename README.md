@@ -6,3 +6,5 @@ Organizes all your desktop items into these folders:
 * Media
 * Others
 * Folders
+
+WARNING: Do not extract script to desktop
