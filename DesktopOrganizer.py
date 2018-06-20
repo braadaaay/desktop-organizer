@@ -22,69 +22,80 @@ dirs = [docdir, mediadir, picdir, folderdir, otherdir]
 docextensions = ('.pdf', '.doc', '.txt', '.docx', '.rtf', '.odt')
 mediaextensions = ('.mp4', '.mpeg4', '.avi', '.mov', '.flv', '.wmv', '.mp3', '.obb', '.wav', '.aac', '.aiff', '.wma', '.m4a')
 picextensions = ('.jpg', '.jpeg', '.png', '.raw', '.gif', '.tiff', '.bmp')
+appdir = os.path.dirname(os.path.abspath(__file__))
 
+def appDirList():
+    appdirlist = os.listdir(appdir)
+    return appdirlist
+
+def getIgnore():
+    #Check if there are any files or folders to ignore from 'ignore.txt'
+    if "ignore.txt" not in appDirList(): #Check if ignore.txt exists
+        with open(os.path.join(appdir, "ignore.txt"), "w"):
+            pass
+        appDirList()
+        ignorelist = []
+        return ignorelist
+    else:
+        with open(os.path.join(appdir, "ignore.txt"), "r") as ignorelist:
+            ignorelist = ignorelist.read().split(",")
+            return ignorelist
 
 def organize():
-
-    #Check if there are any files or folders to ignore from 'ignore.txt'
-    os.chdir(desktop)
-    ignore = []
-    if 'ignore.txt' in desktoplist:
-        print('ignore.txt exists\n     Reading from ignore.txt:')
-        ignore = open('ignore.txt', 'r').read().split('\n')
-        if str(ignore) != "['']":
-            for file in ignore:
-                print("     Ignoring: " + file)
-        else:
-            print('     -ignore.txt Empty!')
-        print('\n')
-    else:
-        print('Creating \'ignore.txt\' ')
-        ignore_txt = open('ignore.txt', 'w+')
-        ignore_txt.close()
 
     #Check if the folders are present, and create them if they arent
     for folder in dirs:
         if not os.path.exists(folder):
             os.makedirs(folder)
             print('Creating ' + folder)
-        else:
-            print(folder + ' exists')
 
     print('\n' * 3)
 
     #Check every file for its extension and move it to the correct folder
     for file in desktoplist:
+        ignorelist = getIgnore()
+        i = 1
         filepath = os.path.join(desktop, file)
-
-        if not (file.lower().endswith('.ini') or file in ignore or file == 'ignore.txt'):
+        for ignorefile in ignorelist:
+            if file == ignorefile or file == "desktop.ini":
+                print("     Ignoring file:", file)
+                break
+            elif i != len(ignorelist):
+                i += 1
+                continue
+            
+            print("     Organizing:", file)
             #Organize the Documents
             if (file.lower().endswith(docextensions)):
                 shutil.move(filepath, os.path.join(docdir, file))
-                print('Organized to Documents: ' + file)
+                #print('Organized to Documents: ' + file)
 
             #Organize the Media
             elif (file.lower().endswith(mediaextensions)):
                 shutil.move(filepath, os.path.join(mediadir, file))
-                print('Organized to Media: ' + file)
+                #print('Organized to Media: ' + file)
 
             #Organize the Pictures
             elif (file.lower().endswith(picextensions)):
                 shutil.move(filepath, os.path.join(picdir, file))
-                print('Organized to Images: ' + file)
+                #print('Organized to Images: ' + file)
 
             #Organize the Folders
             elif os.path.isdir(filepath):
                 if not (filepath in dirs):
                     shutil.move(filepath, os.path.join(folderdir, file))
-                    print('Organized to Folders: ' + file)
+                    #print('Organized to Folders: ' + file)
 
             #Organize the rest
             elif not os.path.isdir(filepath):
                 shutil.move(filepath, os.path.join(otherdir, file))
-                print('Organized to others: ' + file)
+                #print('Organized to others: ' + file)
+    return True
 
 if __name__ == "__main__":
     input('Press Enter to start organizer: \n')
-    organize()
-    input('         --DONE') #Wait for input
+    if organize() is True:
+        input('         --DONE') #Wait for input
+    else:
+        print('Creating \'ignore.txt\' ')
+        input('Add files to ignore.txt to prevent them from being organized!')
