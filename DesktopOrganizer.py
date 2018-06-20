@@ -50,6 +50,7 @@ def organize():
         ignorelist = getIgnore()
         i = 1
         filepath = os.path.join(desktop, file)
+        
         for ignorefile in ignorelist:
             if file == ignorefile or file == "desktop.ini":
                 print("     Ignoring file:", file)
@@ -75,7 +76,7 @@ def organize():
                 #print('Organized to Images: ' + file)
 
             #Organize the Folders
-            elif os.path.isdir(filepath):
+            elif os.path.isdir(filepath) and filepath != appdir:
                 if not (filepath in dirs):
                     shutil.move(filepath, os.path.join(folderdir, file))
                     #print('Organized to Folders: ' + file)
@@ -84,6 +85,7 @@ def organize():
             elif not os.path.isdir(filepath):
                 shutil.move(filepath, os.path.join(otherdir, file))
                 #print('Organized to others: ' + file)
+                
     return True
 
 if __name__ == "__main__":
