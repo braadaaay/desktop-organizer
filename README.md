@@ -7,4 +7,4 @@ Organizes all your desktop items into these folders:
 * Others
 * Folders
 
-WARNING: Do not extract script to desktop
+WARNING: Do not run script from desktop
